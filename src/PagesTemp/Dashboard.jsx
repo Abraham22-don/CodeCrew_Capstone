@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
   const [assignments, setAssignments] = useState([
@@ -20,6 +20,27 @@ function Dashboard() {
   ]);
 
   const [newAssignment, setNewAssignment] = useState("");
+  const [apiStatus, setApiStatus] = useState("Loading...");
+  
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/posts?_limit=1")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("API request failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setApiStatus(
+          data.length > 0
+            ? "API connection successful!"
+            : "No sample data returned."
+        );
+      })
+      .catch(() => {
+        setApiStatus("API unavailable. Check your internet connection.");
+      });
+  }, []);
 
   function addAssignment(event) {
     event.preventDefault();
@@ -42,10 +63,7 @@ function Dashboard() {
     setAssignments(
       assignments.map((assignment) =>
         assignment.id === id
-          ? {
-              ...assignment,
-              completed: !assignment.completed,
-            }
+          ? { ...assignment, completed: !assignment.completed }
           : assignment
       )
     );
@@ -104,9 +122,7 @@ function Dashboard() {
           />
         </div>
 
-        <p style={{ color: "#34d399" }}>
-          {progress}% Complete
-        </p>
+        <p style={{ color: "#34d399" }}>{progress}% Complete</p>
       </div>
 
       <div className="card">
@@ -114,11 +130,7 @@ function Dashboard() {
 
         <form
           onSubmit={addAssignment}
-          style={{
-            display: "flex",
-            gap: "10px",
-            flexWrap: "wrap",
-          }}
+          style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
         >
           <input
             type="text"
@@ -233,6 +245,15 @@ function Dashboard() {
             </div>
           ))
         )}
+      </div>
+
+      <div className="card">
+        <h2>API Connection Test</h2>
+        <p style={{ color: "#34d399" }}>{apiStatus}</p>
+        <p style={{ color: "#94a3b8" }}>
+          This section checks whether the application can retrieve sample
+          data from an external API.
+        </p>
       </div>
     </section>
   );
