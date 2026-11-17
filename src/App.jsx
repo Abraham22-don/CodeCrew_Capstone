@@ -1,19 +1,23 @@
+
+// import routing components to switch pages
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+//import navigation bar and page components
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import About from "./pages/About.jsx";
 
-import "./App.css";
+import "./App.css"; //styles for the app
 
-function App() {
+function App() { //main that defines layout and page routes
   return (
-    <BrowserRouter>
+    // routing function for components 
+    <BrowserRouter> 
       <div className="app">
-        <Navbar />
+        <Navbar /> 
 
-        <main>
+        <main> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
