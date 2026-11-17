@@ -1,3 +1,4 @@
+/* App stylesheet */
 
 :root {
   font-family: "Segoe UI", Arial, sans-serif;
@@ -26,6 +27,7 @@ body {
   color: var(--text);
 }
 
+/* form controls inherit font for consistency */
 button,
 input,
 textarea,
@@ -33,7 +35,8 @@ select {
   font: inherit;
 }
 
-button {
+/* Show a pointer cursor to indicate that buttons can be clicked. */
+button { 
   cursor: pointer;
 }
 
@@ -42,6 +45,7 @@ a {
   text-decoration: none;
 }
 
+/* Let the React root and app wrapper fill at least the viewport height. */
 #root,
 .app {
   min-height: 100vh;
@@ -51,7 +55,8 @@ a {
    2. NAVBAR
 ======================================== */
 
-.navbar {
+/* flexbox to align the brand and navigation and distribute available horizontal space. */
+.navbar { 
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -101,6 +106,7 @@ a {
    3. BUTTONS
 ======================================== */
 
+/* share the main button style, including centered content and a purple gradient. */
 .btn,
 .dashboard-create-btn {
   display: inline-flex;
@@ -132,12 +138,14 @@ a {
    4. HOME PAGE
 ======================================== */
 
+/* center home page and limit width on wider resolutions */
 .home-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 50px 24px 70px;
 }
 
+/*intro and code preview in 2 columns */
 .hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -150,6 +158,7 @@ a {
   max-width: 560px;
 }
 
+/* style the small badge above the main heading. */
 .hero-badge {
   display: inline-block;
   margin-bottom: 22px;
@@ -179,6 +188,7 @@ a {
   line-height: 1.8;
 }
 
+/* arrange buttons and allow wrapping */
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -192,6 +202,7 @@ a {
   min-width: 0;
 }
 
+/* Create the code preview panel and clip content to its rounded edges. */
 .code-card {
   overflow: hidden;
   border: 1px solid #334155;
@@ -200,6 +211,7 @@ a {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
+/* place preview header items on one row with space between them. */
 .code-card-header {
   display: flex;
   align-items: center;
@@ -353,6 +365,7 @@ a {
 
 /* Home Call to Action */
 
+/* lay out the call-to-action message and button side by side. */
 .home-cta {
   display: flex;
   align-items: center;
@@ -379,12 +392,14 @@ a {
    5. DASHBOARD
 ======================================== */
 
+/* center dashboard page and limit width on wider resolutions */
 .dashboard-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 45px 24px 70px;
 }
 
+/* place the dashboard header and create project button on one row with space between them. */
 .dashboard-header {
   display: flex;
   align-items: center;
@@ -393,6 +408,7 @@ a {
   margin-bottom: 32px;
 }
 
+/* style the small badge above the main heading. */
 .dashboard-eyebrow {
   display: block;
   margin-bottom: 10px;
@@ -419,6 +435,7 @@ a {
 
 /* Dashboard Statistics */
 
+/* place the three statistic cards in a row with equal width and spacing. */
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -426,6 +443,7 @@ a {
   margin-bottom: 50px;
 }
 
+/* style the statistic cards with padding, border, and background. */
 .stat-card {
   padding: 23px;
   border: 1px solid var(--border);
@@ -479,6 +497,7 @@ a {
 
 /* Project Section */
 
+/* place the project section heading and back link on one row with space between them. */
 .dashboard-section-heading {
   display: flex;
   align-items: center;
@@ -498,6 +517,7 @@ a {
   line-height: 1.7;
 }
 
+/* style the back link to the home page with color and font weight. */
 .dashboard-back-link {
   color: #c4b5fd;
   font-size: 14px;
@@ -516,6 +536,7 @@ a {
   margin-bottom: 22px;
 }
 
+/* style the search input with padding, border, and background. */
 .dashboard-search {
   display: flex;
   align-items: center;
@@ -564,6 +585,7 @@ a {
   gap: 20px;
 }
 
+/* style the project cards with padding, border, and background. */
 .dashboard-project-card {
   min-width: 0;
   padding: 23px;
@@ -664,6 +686,7 @@ a {
 
 /* Project Progress */
 
+/* style the project progress heading with space between the label and percentage. */
 .project-progress-heading {
   display: flex;
   justify-content: space-between;
@@ -676,6 +699,7 @@ a {
   color: white;
 }
 
+/* create a rounded progress bar track and hide overflow. */
 .project-progress-track {
   height: 7px;
   overflow: hidden;
@@ -719,6 +743,7 @@ a {
 
 /* Create Project Form */
 
+/* style the create project form card with padding, border, and background. */
 .dashboard-form-card {
   margin-bottom: 40px;
   padding: 25px;
@@ -846,12 +871,14 @@ a {
    6. ABOUT PAGE
 ======================================== */
 
+/* center about page and limit width on wider resolutions */
 .about-page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 60px 24px 80px;
 }
 
+/* style the about page hero section with a maximum width and centered text. */
 .about-hero {
   max-width: 750px;
   margin: 0 auto 45px;
@@ -906,6 +933,7 @@ a {
    7. RESPONSIVE DESIGN
 ======================================== */
 
+/* adjust layout and font sizes for smaller screens */
 @media (max-width: 900px) {
   .hero {
     gap: 30px;
@@ -928,6 +956,7 @@ a {
   }
 }
 
+/* further adjust layout and font sizes for even smaller screens */
 @media (max-width: 650px) {
   .navbar {
     align-items: flex-start;
@@ -1004,6 +1033,8 @@ a {
     margin-left: 0;
   }
 }
+
+
 .navbar {
   gap: 24px;
 }
@@ -1068,6 +1099,7 @@ a {
   background: rgba(139, 92, 246, 0.23);
 }
 
+/* style the hero section with a two-column layout, spacing, and padding. */
 .hero-content > p,
 .about-hero > p {
   max-width: 570px;
@@ -1119,6 +1151,7 @@ a {
   font-size: 0.75rem;
 }
 
+/* style the floating cards with absolute positioning, padding, border, and background. */
 .floating-card {
   position: absolute;
   z-index: 2;
@@ -1164,6 +1197,7 @@ a {
   font-size: 0.75rem;
 }
 
+/* style the mini avatars with a flex layout and overlapping circles. */
 .mini-avatars {
   display: flex;
   align-items: center;
@@ -1256,6 +1290,7 @@ a {
   line-height: 1.8;
 }
 
+/* style the highlighted section with a flex layout, spacing, padding, border, and gradient background. */
 .about-highlight {
   display: flex;
   align-items: center;
@@ -1283,6 +1318,10 @@ a {
   color: #94a3b8;
   line-height: 1.7;
 }
+
+/* ========================================
+   8. MEDIA QUERIES
+======================================== */
 
 @media (max-width: 900px) {
   .about-content {
