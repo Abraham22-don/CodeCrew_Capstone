@@ -1,8 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; //import link to navigate between pages without a full reload
 
-function About() {
+
+function About() { ///about page component that describes the app and its purpose
   return (
     <div className="about-page">
+      {/* hero section with title, description, and link to dashboard */}
       <section className="about-hero">
         <span className="section-label">ABOUT CODECREW</span>
 
@@ -17,11 +19,13 @@ function About() {
           track progress, and turn ideas into results.
         </p>
 
+        {/* link to the dashboard page with a call-to-action button */}
         <Link to="/dashboard" className="btn btn-primary">
           Explore Dashboard →
         </Link>
       </section>
 
+    {/* section with three cards describing the app's mission, approach, and vision */}
       <section className="about-content">
         <article className="about-card">
           <div className="feature-icon icon-purple">◎</div>
@@ -66,4 +70,5 @@ function About() {
   );
 }
 
+//export about page component to be used in App.jsx
 export default About;
