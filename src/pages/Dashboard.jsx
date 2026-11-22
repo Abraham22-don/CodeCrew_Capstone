@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react"; //import useState to manage project data, search, filters, and form inputs
+import { Link } from "react-router-dom"; //import link tfor nav without reload
 
-function Dashboard() {
+function Dashboard() { //display project statistics, project cards, and the creation form 
+  
+  // store project list, 3 examples
+  //data held in component memory and resets when component remounts or page reloads, no backend or database yet
+  
   const [projects, setProjects] = useState([
+  
     {
       id: 1,
       name: "CodeCrew Website",
@@ -32,43 +37,54 @@ function Dashboard() {
     },
   ]);
 
+  // store search text and project status filter 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Projects");
+
+// store current values of the project creation form and whether the form is visible
   const [showForm, setShowForm] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
 
+  // count completed projects from the full list, regardless of search filters. 
   const completedProjects = projects.filter(
     (project) => project.status === "Completed"
   ).length;
 
+  //count projects in progress from the full list, regardless of search filters.
   const activeProjects = projects.filter(
     (project) => project.status === "In Progress"
   ).length;
 
+  // filter projects based on search text and status filter
   const filteredProjects = projects.filter((project) => {
+    // convert search text to lowercase for case-insensitive comparison
     const searchText = search.toLowerCase();
 
-    const matchesSearch =
+    //matches if the project name or description includes the search text
+    const matchesSearch = 
       project.name.toLowerCase().includes(searchText) ||
       project.description.toLowerCase().includes(searchText);
 
+      //matches if the filter is "All Projects" or the project status matches the selected filter
     const matchesFilter =
       filter === "All Projects" || project.status === filter;
 
-    return matchesSearch && matchesFilter;
+    return matchesSearch && matchesFilter; //display project if it matches both search and filter criteria
   });
 
-  function handleCreateProject(event) {
+  function handleCreateProject(event) { // project form submission handling
     event.preventDefault();
 
-    if (!projectName.trim()) {
+    if (!projectName.trim()) { //reject empty names
       return;
     }
 
-    const newProject = {
-      id: Date.now(),
+    const newProject = { //create new project with default values and form inputs
+      id: Date.now(), // timestamp as unique id
       name: projectName.trim(),
+
+      //use default description if user leaves the field blank 
       description:
         projectDescription.trim() || "No description added yet.",
       category: "New Project",
@@ -77,20 +93,24 @@ function Dashboard() {
       color: "purple",
     };
 
+    // use latest state ti create new array containing all projects + new one. avoids changing original array
     setProjects((currentProjects) => [
       ...currentProjects,
       newProject,
     ]);
 
+    //clear form fields and close the form after submission
     setProjectName("");
     setProjectDescription("");
     setShowForm(false);
+    //reset search and filter to show all projects after adding a new one
     setFilter("All Projects");
     setSearch("");
   }
 
   return (
     <div className="dashboard-page">
+      {/* header section with title, description, and button to toggle the project creation form */}
       <header className="dashboard-header">
         <div>
           <span className="dashboard-eyebrow">
@@ -102,6 +122,7 @@ function Dashboard() {
           <p>Welcome back! Here's what's happening with your projects.</p>
         </div>
 
+      {/* button to toggle the project creation form, changes text based on whether the form is visible */}
         <button
           className="dashboard-create-btn"
           onClick={() => setShowForm(!showForm)}
@@ -110,6 +131,7 @@ function Dashboard() {
         </button>
       </header>
 
+      {/*show statistics about total projects, in progress, and completed */}
       <section className="dashboard-stats">
         <article className="stat-card">
           <div className="stat-card-top">
@@ -139,12 +161,17 @@ function Dashboard() {
         </article>
       </section>
 
+      {/* render creation form if showForm is true, otherwise hide it */}
       {showForm && (
         <section className="dashboard-form-card">
           <h2>Create a Project</h2>
           <p>Add a new project to your workspace.</p>
 
+
+        {/* form to create a new project, calls handleCreateProject on submit */}
           <form className="dashboard-form" onSubmit={handleCreateProject}>
+
+            {/* htmlFor connects label to input with matching id, improves accessibility */}
             <label htmlFor="project-name">Project Name</label>
             <input
               id="project-name"
@@ -155,6 +182,7 @@ function Dashboard() {
               required
             />
 
+        {/* store description changes in state as the user types */}
             <label htmlFor="project-description">Description</label>
             <textarea
               id="project-description"
@@ -165,7 +193,7 @@ function Dashboard() {
               }
               rows="3"
             />
-
+          {/* submit button to create the project, triggers form submission */}
             <button className="dashboard-create-btn" type="submit">
               Create Project →
             </button>
@@ -173,6 +201,7 @@ function Dashboard() {
         </section>
       )}
 
+          {/* display project nav, search controls, and cards for each project in the filtered list */}
       <section className="dashboard-projects">
         <div className="dashboard-section-heading">
           <div>
@@ -187,6 +216,7 @@ function Dashboard() {
         </div>
 
         <div className="dashboard-toolbar">
+          {/* update search as user types */}
           <div className="dashboard-search">
             <span>⌕</span>
             <input
@@ -198,6 +228,7 @@ function Dashboard() {
             />
           </div>
 
+          {/* update filter state when a status is selected.Without explicit value attributes, options use their text as values. */}
           <select
             className="dashboard-filter"
             value={filter}
@@ -210,8 +241,11 @@ function Dashboard() {
           </select>
         </div>
 
+        {/*show matching project cartds, or an empty state mnessage if no projects match the search and filter criteria */}
         {filteredProjects.length > 0 ? (
           <div className="dashboard-project-grid">
+
+            {/* convert matching project into cards, key helps react identify each project between renders */}
             {filteredProjects.map((project) => (
               <article className="dashboard-project-card" key={project.id}>
                 <div className="project-card-top">
@@ -219,6 +253,7 @@ function Dashboard() {
                     {"</>"}
                   </div>
 
+                {/* select the badge style based on the projects status */}
                   <span
                     className={`project-status ${
                       project.status === "Completed"
@@ -231,17 +266,20 @@ function Dashboard() {
                   </span>
                 </div>
 
+                {/* display project category, name, description, and progress */}
                 <span className="project-category">{project.category}</span>
                 <h3>{project.name}</h3>
                 <p className="project-description">
                   {project.description}
                 </p>
-
+                
+                {/* display progress bar with accessible attributes for screen readers */}
                 <div className="project-progress-heading">
                   <span>Progress</span>
                   <strong>{project.progress}%</strong>
                 </div>
 
+                    {/* progress bar with fill color based on project color, width based on progress percentage */}
                 <div
                   className="project-progress-track"
                   role="progressbar"
@@ -268,6 +306,7 @@ function Dashboard() {
             ))}
           </div>
         ) : (
+          /* provide feedback and a creation button if no projects match the search and filter criteria */
           <div className="dashboard-empty">
             <div className="empty-icon">⌕</div>
             <h3>No projects found</h3>
@@ -281,7 +320,7 @@ function Dashboard() {
           </div>
         )}
       </section>
-
+        {/* banner section with a motivational message and link to the About page */}
       <section className="dashboard-banner">
         <div className="banner-icon">✦</div>
         <div>
@@ -296,4 +335,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Dashboard; //export dashboard so app.jsx can import and render it when the user navigates to /dashboard
