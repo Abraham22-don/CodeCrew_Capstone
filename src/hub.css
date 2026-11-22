@@ -1,0 +1,61 @@
+/* Keep the existing CodeCrew palette and cards; add coursework-specific controls. */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1; }
+.navbar-brand small { display: block; margin-top: 4px; font-family: 'Segoe UI', sans-serif; font-size: .7rem; font-weight: 400; color: #94a3b8; }
+.site-footer { display: flex; justify-content: space-between; gap: 16px; padding: 24px 6%; border-top: 1px solid #293449; color: #94a3b8; font-size: .85rem; }
+.feedback { max-width: 1152px; margin: 0 auto; padding: 0 24px; }
+.success, .error { padding: 14px 18px; border-radius: 10px; }
+.success { color: #bbf7d0; background: #153b2b; }
+.error { color: #fecaca; background: #451a25; }
+.loading { padding: 70px 6%; }
+input, select, textarea { width: 100%; padding: 12px; border: 1px solid #475569; border-radius: 9px; color: #f8fafc; background: #0b1020; }
+button:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid #a78bfa; outline-offset: 3px; }
+.filters { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 25px; }
+.filters label, .status-label { display: block; color: #cbd5e1; font-size: .85rem; margin-bottom: 8px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.card-actions { margin-top: 20px; }
+.card-actions .btn { font-size: 12px; padding: 10px 12px; }
+.danger { background: #451a25; color: #fecaca; }
+.overdue { color: #fda4af; }
+.due-date { color: #cbd5e1; }
+details { margin: 20px 0; }
+summary { cursor: pointer; color: #c4b5fd; }
+.description { white-space: pre-wrap; overflow-wrap: anywhere; color: #cbd5e1; line-height: 1.7; }
+.course-form { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.course-form input { flex: 1; min-width: 180px; }
+.course-tags { display: flex; gap: 10px; flex-wrap: wrap; padding: 0; list-style: none; }
+.course-tags li { border: 1px solid #475569; border-radius: 20px; padding: 8px 14px; overflow-wrap: anywhere; }
+progress { width: 100%; height: 14px; accent-color: #8b5cf6; }
+.course-progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 20px; }
+.course-progress h3 { overflow-wrap: anywhere; }
+.skip-link { position: absolute; top: -100px; left: 10px; padding: 12px; background: #21183b; z-index: 10; }
+.skip-link:focus { top: 10px; }
+@media(max-width: 700px) { .filters, .course-progress { grid-template-columns: 1fr; } .site-footer { flex-direction: column; } .navbar { padding: 16px 20px; } .navbar-links { flex-wrap: wrap; } }
+
+/* Original Dashboard visual details adapted to real coursework data. */
+.hub-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 30px; }
+.stat-rose { color: #fda4af; background: #451a25; }
+.stat-card { transition: border-color .2s ease, transform .2s ease; }
+.stat-card:hover { border-color: #8b5cf6; transform: translateY(-2px); }
+.completion-panel { background: linear-gradient(120deg, #1c1938, #141b2d); }
+.completion-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.completion-heading h2 { margin-top: 0; }
+.completion-number { color: #c4b5fd; font-size: 2.4rem; }
+.completion-panel > p { color: #cbd5e1; }
+.completion-panel > .project-progress-track { height: 10px; }
+.project-progress-fill { transition: width .25s ease; }
+.completion-panel .course-progress article { min-width: 0; padding: 18px; background: #141b2d; border: 1px solid #293449; border-radius: 12px; }
+.completion-panel .course-progress h3 { margin-top: 0; }
+@media (max-width: 1000px) { .hub-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 650px) { .hub-stats { grid-template-columns: 1fr; } .completion-heading { align-items: flex-start; } }
+@media (prefers-reduced-motion: reduce) { .stat-card, .project-progress-fill { transition: none; } .stat-card:hover { transform: none; } }
+
+/* Access-code sign-in reuses the existing CodeCrew palette and form styling. */
+.login-page { width: 100%; max-width: 540px; margin: 70px auto; padding: 0 22px; }
+.login-card { padding: 32px; background: linear-gradient(140deg, #1c1938, #141b2d); }
+.login-card > .navbar-logo { margin-bottom: 28px; }
+.login-card h1 { font-size: 2.3rem; margin: 12px 0; }
+.login-card > p { color: #cbd5e1; line-height: 1.7; }
+.login-card .login-note { margin-top: 28px; color: #94a3b8; font-size: .85rem; }
+@media (max-width: 650px) { .login-page { margin: 35px auto; } .login-card { padding: 24px; } }
