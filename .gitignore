@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Private environment settings
+.env
+.env.*
+!.env.example
