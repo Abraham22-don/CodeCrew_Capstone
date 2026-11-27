@@ -1,59 +1,73 @@
-import { NavLink } from "react-router-dom"; //import "./Navbar.css"; //styles for the navigation bar
+/**
+ * Displays the CodeCrew navigation bar. Everyone can see the logo.
+ * Once the session is verified, the bar also shows the coursework links
+ * and the Sign out button.
+ */
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 
-function Navbar() { //shared navigation bar component for all pages
+export default function Navbar() {
+  // useAuth provides the current sign-in status and the shared logout function.
+  const auth = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  async function signOut() {
+    // Disable the button while signing out and clear any error from an earlier attempt.
+    setBusy(true);
+    setError('');
+
+    try {
+      // logout() contacts the API and updates the shared sign-in status.
+      // React then updates which links appear in the navigation bar.
+      await auth.logout();
+    } catch (e) {
+      // Show the error message if the sign-out request fails.
+      setError(e.message);
+    } finally {
+      // The request has finished. Allow another attempt if the button is still visible.
+      setBusy(false);
+    }
+  }
+
   return (
     <header className="site-header">
-      <nav className="navbar">
-        {/* Link the brand to the Home page.
-            The end prop requires the URL to match the path exactly
-            for this link to be considered active. */}
-        <NavLink to="/" end className="navbar-brand">
-        {/* Display </> using HTML entities for the angle brackets. */}
-          <span className="navbar-logo">&lt;/&gt;</span>
-          <span>CodeCrew</span>
+      <nav className="navbar" aria-label="Main navigation">
+        {/* Clicking the logo opens the dashboard for signed-in users and the login page otherwise. */}
+        <NavLink
+          to={auth.status === 'authenticated' ? '/dashboard' : '/login'}
+          className="navbar-brand"
+        >
+          <span className="navbar-logo">{'</>'}</span>
+          <span>
+            CodeCrew <small>Student Productivity Hub</small>
+          </span>
         </NavLink>
 
-        <div className="navbar-links">
-           {/* React Router supplies isActive to the className function.
-              Add the active class when this link matches the current page. */}
-          <NavLink
-            to="/"
-            end
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Home
-          </NavLink>
+        {auth.status === 'authenticated' && (
+          <div className="navbar-links">
+            {/* Build one link per page. For example, “Assignments” links to /assignments.
+                NavLink supplies isActive so the current page can be highlighted. */}
+            {['Dashboard', 'Assignments', 'Progress'].map(page => (
+              <NavLink
+                key={page}
+                to={`/${page.toLowerCase()}`}
+                className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}
+              >
+                {page}
+              </NavLink>
+            ))}
 
-            {/* Navigate to the Dashboard and highlight its link when active. */}
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Dashboard
-          </NavLink>
-
-            {/* Navigate to the About page and highlight its link when active. */}
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            About
-          </NavLink>
-        </div>
-
-            {/* Provide a prominent call-to-action link to the Dashboard. */}
-        <NavLink to="/dashboard" className="navbar-cta">
-          Get Started <span>→</span>
-        </NavLink>
+            <button className="btn btn-secondary" disabled={busy} onClick={signOut}>
+              {busy ? 'Signing out…' : 'Sign out'}
+            </button>
+          </div>
+        )}
       </nav>
+
+      {/* role="alert" lets screen readers announce a sign-out error when it appears. */}
+      {error && <p className="error" role="alert">{error}</p>}
     </header>
   );
 }
-
-export default Navbar;
