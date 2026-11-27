@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS assignments (
   course_id INTEGER NOT NULL REFERENCES courses(course_id),
   description VARCHAR(2000) NOT NULL DEFAULT ''
 );
+
 CREATE INDEX IF NOT EXISTS assignments_course_idx ON assignments(course_id);
 CREATE INDEX IF NOT EXISTS assignments_due_idx ON assignments(due_date);
 -- One shared demo user; authentication is intentionally outside this version.

@@ -6,6 +6,7 @@ import { installAuth, readAuthConfig, requireAuth, requireAppRequest } from './a
 import { assignmentError, validId, statuses } from './validation.js';
 const selectAssignment = `SELECT a.assignment_id, a.title, to_char(a.due_date, 'YYYY-MM-DD') AS due_date,
  a.status, a.description, a.course_id, c.course_name FROM assignments a JOIN courses c USING (course_id)`;
+
 // Inject the pool so the API can also be integration-tested against a test database.
 export function createApp(db, authConfig = readAuthConfig()) {
   const app = express();
@@ -15,6 +16,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     await db.query('SELECT 1');
     res.json({ status: 'ok', database: 'connected' });
   });
+
   // Health stays public for deployment checks. All remaining data routes require a session.
   app.locals.sessionStore = installAuth(app, db, authConfig);
   app.use('/api', requireAuth, requireAppRequest);
@@ -22,6 +24,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     res.json((await db.query(`SELECT course_id, course_name FROM courses WHERE user_id =
       (SELECT user_id FROM users WHERE email = 'demo@student.example') ORDER BY course_name`)).rows);
   });
+
   // Course form: validate the name and assign this shared workspace's demo user.
   app.post('/api/courses', async (req, res) => {
     const name = req.body?.course_name;
@@ -30,6 +33,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
       VALUES ($1, (SELECT user_id FROM users WHERE email = 'demo@student.example')) RETURNING course_id, course_name`, [name.trim()]);
     res.status(201).json(result.rows[0]);
   });
+
   // Optional query parameters support API-level course and status filtering.
   app.get('/api/assignments', async (req, res) => {
     const { course_id, status } = req.query;
@@ -40,6 +44,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     if (status !== undefined) { values.push(status); clauses.push(`a.status = $${values.length}`); }
     res.json((await db.query(selectAssignment + (clauses.length ? ' WHERE ' + clauses.join(' AND ') : '') + ' ORDER BY a.due_date, a.assignment_id', values)).rows);
   });
+
   // ID validation is separate from authorization; both are required.
   app.param('id', (req, res, next, id) => {
     if (!validId(id)) return res.status(400).json({ error: 'Invalid assignment ID.' });
@@ -50,6 +55,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     if (!result.rowCount) return res.status(404).json({ error: 'Assignment not found.' });
     res.json(result.rows[0]);
   });
+
   // Create assignments only after validating all writable fields.
   app.post('/api/assignments', async (req, res) => {
     const error = assignmentError(req.body);
@@ -59,6 +65,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
       VALUES ($1,$2,$3,$4,$5) RETURNING assignment_id`, [title.trim(), due_date, status, course_id, description.trim()]);
     res.status(201).json((await db.query(selectAssignment + ' WHERE a.assignment_id = $1', [result.rows[0].assignment_id])).rows[0]);
   });
+
   // Replace editable fields; the ID and database relationships stay controlled by the API.
   app.put('/api/assignments/:id', async (req, res) => {
     const error = assignmentError(req.body);
@@ -69,6 +76,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     if (!result.rowCount) return res.status(404).json({ error: 'Assignment not found.' });
     res.json((await db.query(selectAssignment + ' WHERE a.assignment_id = $1', [req.params.id])).rows[0]);
   });
+
   // A smaller mutation supports the status dropdown and Mark complete button.
   app.patch('/api/assignments/:id/status', async (req, res) => {
     if (!statuses.includes(req.body?.status)) return res.status(400).json({ error: 'Select a valid status.' });
@@ -76,6 +84,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     if (!result.rowCount) return res.status(404).json({ error: 'Assignment not found.' });
     res.json((await db.query(selectAssignment + ' WHERE a.assignment_id = $1', [req.params.id])).rows[0]);
   });
+
   // Return 204 only after the database confirms deletion.
   app.delete('/api/assignments/:id', async (req, res) => {
     const result = await db.query('DELETE FROM assignments WHERE assignment_id=$1 RETURNING assignment_id', [req.params.id]);
@@ -83,6 +92,7 @@ export function createApp(db, authConfig = readAuthConfig()) {
     res.status(204).end();
   });
   app.use('/api', (req, res) => res.status(404).json({ error: 'API route not found.' }));
+
   // Async route/session errors reach this handler; secrets are never sent to the client.
   app.use((error, req, res, next) => {
     if (error.type === 'entity.parse.failed') return res.status(400).json({ error: 'Request body must be valid JSON.' });
@@ -92,5 +102,6 @@ export function createApp(db, authConfig = readAuthConfig()) {
     console.error('API request failed:', error.code || error.name);
     res.status(500).json({ error: 'Unable to access saved data. Check that PostgreSQL is running and database setup is complete.' });
   });
+  
   return app;
 }
